@@ -19,8 +19,16 @@ app.get('/user', (req, res) => {
     // ✅ Path Traversal mitigation: resolve under a fixed root and enforce containment
     const fs = require('fs');
     const DATA_ROOT = "/var/data";
-    const resolvedPath = path.resolve(DATA_ROOT, input);
-    if (!(resolvedPath === DATA_ROOT || resolvedPath.startsWith(DATA_ROOT + path.sep))) {
+    let rootReal;
+    let resolvedPath;
+    try {
+        rootReal = fs.realpathSync(DATA_ROOT);
+        const candidatePath = path.resolve(rootReal, input);
+        resolvedPath = fs.realpathSync(candidatePath);
+    } catch (e) {
+        return res.status(403).send("Forbidden");
+    }
+    if (!(resolvedPath === rootReal || resolvedPath.startsWith(rootReal + path.sep))) {
         return res.status(403).send("Forbidden");
     }
     const data = fs.readFileSync(resolvedPath, "utf8");
