@@ -5,6 +5,10 @@ const app = express();
 
 app.get('/user', (req, res) => {
     const input = req.query.name;
+    const safeNamePattern = /^[a-zA-Z0-9._-]+$/;
+    if (typeof input !== 'string' || !safeNamePattern.test(input)) {
+        return res.status(400).send("Invalid file name");
+    }
 
     // ❌ XSS
     res.send("<h1>Hello " + input + "</h1>");
@@ -16,7 +20,7 @@ app.get('/user', (req, res) => {
         }
     });
 
-    // ✅ Path Traversal mitigation: resolve under a fixed root and enforce containment
+    // ✅ Path Traversal mitigation: validate filename + resolve under a fixed root and enforce containment
     const fs = require('fs');
     const DATA_ROOT = "/var/data";
     let rootReal;
