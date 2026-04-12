@@ -1,34 +1,30 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import javax.servlet.http.HttpServletRequest;
-import java.security.MessageDigest;
+import java.sql.*;
+import java.io.*;
 
 public class VulnerableApp {
 
-    // 1. VULNERABILIDAD: SQL Injection (Crítica)
-    // CodeQL detectará que 'userId' viene del usuario y va directo a la query sin filtrar.
-    public void getUserData(HttpServletRequest request, Connection conn) throws Exception {
-        String userId = request.getParameter("id");
-        Statement statement = conn.createStatement();
-        String sql = "SELECT * FROM users WHERE id = '" + userId + "'"; 
-        ResultSet rs = statement.executeQuery(sql);
-    }
+    public static void main(String[] args) throws Exception {
+        String userInput = args.length > 0 ? args[0] : "test";
 
-    // 2. VULNERABILIDAD: Uso de Hash Débil (Media/Alta)
-    // MD5 ya no se considera seguro para proteger datos sensibles.
-    public byte[] hashPassword(String password) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        return md.digest(password.getBytes());
-    }
+        // ❌ 1. SQL Injection
+        Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/test", "user", "pass");
+        Statement stmt = conn.createStatement();
+        String query = "SELECT * FROM users WHERE name = '" + userInput + "'";
+        ResultSet rs = stmt.executeQuery(query);
 
-    // 3. VULNERABILIDAD: Hardcoded Password (Alta)
-    // Nunca se deben dejar contraseñas escritas directamente en el código.
-    public void connectDatabase() throws Exception {
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "admin";
-        String pass = "p4ssw0rd_secreta_123"; // Secret Scanning detectará esto
-        Connection conn = DriverManager.getConnection(url, user, pass);
+        while (rs.next()) {
+            System.out.println(rs.getString("name"));
+        }
+
+        // ❌ 2. Command Injection
+        Runtime.getRuntime().exec("ls " + userInput);
+
+        // ❌ 3. Path Traversal / Arbitrary File Read
+        File file = new File("/var/data/" + userInput);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        System.out.println(br.readLine());
+
+        conn.close();
     }
 }
