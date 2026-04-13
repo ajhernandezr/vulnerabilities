@@ -21,21 +21,21 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.0.RELEASE</version>
+            <version>4.3.20.RELEASE</version>
         </dependency>
 
         <!-- ❌ Jackson Databind vulnerable (CVE-2019-12384 + muchos más) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.5</version>
+            <version>2.12.7.1</version>
         </dependency>
 
         <!-- ❌ Apache Commons Collections 3.2.1 – RCE (CVE-2015-7501) -->
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
+            <version>3.2.2</version>
         </dependency>
 
         <!-- ❌ Jetty 9.2.x vulnerable a múltiples issues (DoS, Info leak) -->
