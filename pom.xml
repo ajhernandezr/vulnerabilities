@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>vulnerable-app</artifactId>
+    <version>1.0.0</version>
+
+    <dependencies>
+
+        <!-- ❌ Log4j 1.x – múltiples CVEs, algunas críticas (RCE, DoS) -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+        <!-- ❌ Spring Framework 4.x – vulnerabilidades antiguas -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>4.3.0.RELEASE</version>
+        </dependency>
+
+        <!-- ❌ Jackson Databind vulnerable (CVE-2019-12384 + muchos más) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.5</version>
+        </dependency>
+
+        <!-- ❌ Apache Commons Collections 3.2.1 – RCE (CVE-2015-7501) -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- ❌ Jetty 9.2.x vulnerable a múltiples issues (DoS, Info leak) -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.2.0.v20140526</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
