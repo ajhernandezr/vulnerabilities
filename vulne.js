@@ -1,5 +1,5 @@
 const express = require('express');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const app = express();
 
 app.get('/user', (req, res) => {
@@ -9,7 +9,11 @@ app.get('/user', (req, res) => {
     res.send("<h1>Hello " + input + "</h1>");
 
     // ❌ Command Injection
-    exec("ls " + input);
+    execFile('ls', [input], (error) => {
+        if (error) {
+            console.error(error);
+        }
+    });
 
     // ❌ Path Traversal
     const fs = require('fs');
